@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Project2Application {
 
-    //Doffy
     public static void main(String[] args) {
         SpringApplication.run(Project2Application.class, args);
     }
