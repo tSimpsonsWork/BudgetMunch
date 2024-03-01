@@ -8,7 +8,7 @@ import java.util.ArrayList;
 @Repository
 public class EmployeeRepo {
 
-    public ArrayList<Employee> employee = new ArrayList<Employee>();
+    public ArrayList<Employee> employee = new ArrayList<>();
 
     public ArrayList<Employee> getAll() {
         return employee;
