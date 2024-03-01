@@ -13,7 +13,20 @@ public class EmployeeService {
     @Autowired
     EmployeeRepo employeeRepo;
 
+
     public ArrayList<Employee> getAll() {
         return employeeRepo.getAll();
+    }
+
+    public String add(Employee employee) {
+        return employeeRepo.add(employee);
+    }
+
+    public String edit(Employee employee) {
+        return employeeRepo.edit(employee);
+    }
+
+    public String delete(int empNo) {
+        return employeeRepo.delete(empNo);
     }
 }
