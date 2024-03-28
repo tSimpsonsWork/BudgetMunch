@@ -12,7 +12,7 @@ import java.util.List;
 public class Budget2Controller {
 
     private final Budget2Service budget2Service;
-    private static final Object API_KEY = "AIzaSyACxKlJdCqllVa0kwcMQh5ZRWkZZ3NoqBA";
+    private static final Object API_KEY = "";
 
     @Autowired
     public Budget2Controller (Budget2Service budget2Service){
