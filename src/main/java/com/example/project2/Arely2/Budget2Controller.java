@@ -64,7 +64,7 @@ public class Budget2Controller {
 //                .queryParam("address", address)
 //                .build();
 //         System.out.println(uri.toUriString());
-         ResponseEntity<Response> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=25.7562465,-80.5279754&radius=10000&key=AIzaSyACxKlJdCqllVa0kwcMQh5ZRWkZZ3NoqBA"
+         ResponseEntity<Response> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=25.7562465,-80.5279754&radius=10000&key="
         ,Response.class);
         return response.getBody();
     }
