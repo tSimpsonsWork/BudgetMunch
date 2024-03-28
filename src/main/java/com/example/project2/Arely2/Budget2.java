@@ -18,6 +18,8 @@ public class Budget2 {
             strategy = GenerationType.SEQUENCE,
             generator = "budget2_sequence"
     )
+
+    //columns: 5
     private Long id;
     private String name;
     private String email;
