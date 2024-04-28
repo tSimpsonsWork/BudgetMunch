@@ -1,6 +1,6 @@
 package com.example.project2;
 
-import com.example.project2.Arely2.Result;
+import com.example.project2.BudgetMunchCode.Result;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RestController;

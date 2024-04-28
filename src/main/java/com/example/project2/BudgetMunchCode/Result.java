@@ -1,11 +1,14 @@
-package com.example.project2.Arely2;
+package com.example.project2.BudgetMunchCode;
 
 public class Result {
 
+    //all the variables stored in the result of the Json
     private String name;
     private int price_level;
     private double rating;
     private String vicinity;
+
+    //all the getters and setters for the variables that show up on the json
 
     public String getName() {
         return name;
