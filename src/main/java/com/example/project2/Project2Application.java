@@ -30,7 +30,7 @@ public class Project2Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         try {
-
+            //TODO: Students will get deleted before new so change if you want to keep
             List<Student> listOfStudents = new ArrayList<>();
             studentService.deleteAllStudents();
             for (int i = 0; i < 20; i++) {

@@ -14,7 +14,6 @@ import lombok.*;
 public class Student {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "Student_Name")
