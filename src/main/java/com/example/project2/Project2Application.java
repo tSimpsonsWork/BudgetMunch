@@ -1,5 +1,6 @@
 package com.example.project2;
 
+
 import com.example.project2.entity.Student;
 import com.example.project2.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.example.project2.Arely2.Result;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.RestController;
+
 @SpringBootApplication
 @Slf4j
 public class Project2Application implements CommandLineRunner {
@@ -22,12 +28,11 @@ public class Project2Application implements CommandLineRunner {
     public Project2Application(StudentService studentService) {
         this.studentService = studentService;
     }
-
     public static void main(String[] args) {
         SpringApplication.run(Project2Application.class, args);
+        Result result = new Result();
+        System.out.println(result);
     }
-
-
     @Override
     public void run(String... args) throws Exception {
         try {
