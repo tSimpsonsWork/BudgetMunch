@@ -1,53 +1,49 @@
 package com.example.project2;
 
-//import com.example.project2.entity.Employee;
-//import com.example.project2.repository.EmployeeRepo;
 import com.example.project2.entity.Student;
+import com.example.project2.service.StudentService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
-
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 @SpringBootApplication
-public class Project2Application {
-//public class Project2Application implements CommandLineRunner {
+@Slf4j
+public class Project2Application implements CommandLineRunner {
 
-//    @Autowired
-//    EmployeeRepo employeeRepo;
+    private final StudentService studentService;
 
-//    @Value("${url}")
-//    private String value;
-//
-//    @Value("${nums}")
-//    private int[] nums;
+    @Autowired
+    public Project2Application(StudentService studentService) {
+        this.studentService = studentService;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(Project2Application.class, args);
     }
 
-//    @Override
-//    public void run(String... args) throws Exception {
-//
-//        System.out.println(value);
-//
-//        for(int a:nums)
-//            System.out.println(a);
-//
-//
-//        Employee e1 = new Employee(1,"Luffy","Grandline");
-//        Employee e2 = new Employee(2,"Doflamingo", "Dressrosa");
-//
-//
-//        employeeRepo.employee.addAll(Arrays.asList(e1,e2));
-//    }
+    @Override
+    public void run(String... args) throws Exception {
+        try {
 
-//Feature with TS
+            List<Student> listOfStudents = new ArrayList<>();
+            studentService.deleteAllStudents();
+            for (int i = 0; i < 20; i++) {
+                Random random = new Random();
+                String randomName = "Student".concat(String.valueOf(random.nextLong(1, 100)));
+                Student student = new Student(random.nextLong(1, 100), randomName, randomName.concat("@fiu.edu"), random.nextInt(18, 60));
+                listOfStudents.add(student);
+            }
+            studentService.saveStudent(listOfStudents);
+            log.info("Students successfully added");
+        }catch (Exception e){
+            log.error("Student unsuccessful added");
+            throw new Exception();
+        }
+    }
 }
