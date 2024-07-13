@@ -27,6 +27,7 @@ public class Project2Application implements CommandLineRunner {
         SpringApplication.run(Project2Application.class, args);
     }
 
+
     @Override
     public void run(String... args) throws Exception {
         try {
