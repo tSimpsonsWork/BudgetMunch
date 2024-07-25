@@ -19,7 +19,7 @@ public class StudentService {
     }
 
     public void saveStudent(List<Student> student) {
-        studentRepository.saveAllAndFlush(student);
+        studentRepository.saveAll(student);
     }
     public void deleteAllStudents() {
         studentRepository.deleteAll();
