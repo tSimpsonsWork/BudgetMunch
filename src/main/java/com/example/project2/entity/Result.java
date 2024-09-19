@@ -1,5 +1,12 @@
+<<<<<<<< HEAD:src/main/java/com/example/project2/BudgetMunchCode/Result.java
 package com.example.project2.BudgetMunchCode;
+========
+package com.example.project2.entity;
+>>>>>>>> origin/Trev:src/main/java/com/example/project2/entity/Result.java
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Result {
 
     //all the variables stored in the result of the Json

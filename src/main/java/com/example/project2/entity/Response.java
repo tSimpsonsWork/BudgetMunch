@@ -1,7 +1,9 @@
-package com.example.project2.BudgetMunchCode;
+package com.example.project2.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Response {
     @JsonProperty("results")//json annotation allows to map to results in json
     private Result[] result;
