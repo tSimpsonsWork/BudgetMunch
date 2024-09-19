@@ -24,14 +24,13 @@ public class Project2Application implements CommandLineRunner{
 
     private final StudentService studentService;
 
-    @Autowired
-    public Project2Application(StudentService studentService) {
-        this.studentService = studentService;
-    }
+
+
     public static void main(String[] args) {
         SpringApplication.run(Project2Application.class, args);
 
     }
+
     @Override
     public void run(String... args){
 
