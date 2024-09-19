@@ -9,12 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
 @Service
 @Slf4j
+@CrossOrigin("http://localhost:3000")
 public class StudentService {
     //TODO: Add a goggle map search
     //TODO: Save a list of locations
