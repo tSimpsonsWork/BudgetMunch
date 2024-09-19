@@ -2,6 +2,7 @@ package com.example.project2.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 
 @Entity
@@ -11,18 +12,24 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table
+@Component
 public class Student {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "Student_Name")
+    @Column(name = "Resturant Name")
     private String name;
 
-    @Column(name= "Email")
-    private String email;
+    @Column(name= "Rating")
+    private double rating;
 
-    @Column(name = "Age")
-    private Integer age;
+    @Column(name = "Vicinity")
+    private String vicinity;
+
+    @Column(name = "Price Level")
+    private Integer priceLevel;
+
 
 }
