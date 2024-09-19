@@ -1,22 +1,10 @@
 package com.example.project2;
-
-
-import com.example.project2.entity.Response;
-import com.example.project2.entity.Result;
-import com.example.project2.entity.Student;
-import com.example.project2.entity.repository.StudentRepository;
 import com.example.project2.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 @SpringBootApplication
 @Slf4j
@@ -24,7 +12,10 @@ public class Project2Application implements CommandLineRunner{
 
     private final StudentService studentService;
 
-
+    @Autowired
+    public Project2Application(StudentService studentService){
+        this.studentService = studentService;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(Project2Application.class, args);
