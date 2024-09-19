@@ -4,27 +4,23 @@ import com.example.project2.entity.Response;
 import com.example.project2.entity.Result;
 import com.example.project2.entity.Student;
 import com.example.project2.entity.repository.StudentRepository;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
 @Service
 @Slf4j
-@CrossOrigin("http://localhost:3000")
 public class StudentService {
     //TODO: Add a goggle map search
     //TODO: Save a list of locations
 
     private final StudentRepository studentRepository;
 
-    @Autowired
     private Student student;
 
     @Autowired
