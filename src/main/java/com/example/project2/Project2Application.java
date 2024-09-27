@@ -27,6 +27,7 @@ public class Project2Application implements CommandLineRunner{
 
         studentService.addStudent2();
 
+
 //        try {
 //            //TODO: Students will get deleted before new so change if you want to keep
 //            List<Student> listOfStudents = new ArrayList<>();
