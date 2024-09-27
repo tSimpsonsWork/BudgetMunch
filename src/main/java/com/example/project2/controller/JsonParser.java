@@ -1,4 +1,6 @@
-package com.example.project2.BudgetMunchCode;
+package com.example.project2;
+import com.example.project2.BudgetMunchCode.Budget2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +11,7 @@ import java.util.List;
 @Component
 public class JsonParser {
 
+    @Autowired
     private final Budget2Service budget2Service;
     private final ObjectMapper objectMapper;
 
