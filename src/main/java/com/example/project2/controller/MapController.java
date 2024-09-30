@@ -1,9 +1,8 @@
-
 package com.example.project2.controller;
 
 import com.example.project2.JsonParser;
+import com.example.project2.entity.Response;
 import com.example.project2.service.StudentService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,4 +34,3 @@ public class MapController {
 
     }
 }
-
