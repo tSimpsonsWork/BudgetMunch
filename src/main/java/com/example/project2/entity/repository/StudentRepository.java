@@ -11,7 +11,7 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
     @Override
     void deleteAll();
 
-    @Query("SELECT s FROM Student s WHERE s.priceLevel = ?1")
+    @Query("SELECT s FROM Student s WHERE s.password = ?1")
     Optional<Student> findBudget2Byprice_level(int priceLevel);
 
 }

@@ -19,17 +19,17 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "Resturant Name")
-    private String name;
+    @Column(name = "Customer Name")
+    private String customerName;
 
-    @Column(name= "Rating")
-    private double rating;
+    @Column(name= "User Name")
+    private String userName;
 
-    @Column(name = "Vicinity")
-    private String vicinity;
+    @Column(name = "Email")
+    private String email;
 
-    @Column(name = "Price Level")
-    private Integer priceLevel;
+    @Column(name = "Password")
+    private String password;
 
 
 }
