@@ -16,11 +16,17 @@ public class Student {
     @Id
     private Long id;
 
-    @Column(name = "Student_Name")
-    private String name;
+    @Column(name = "Customer Name")
+    private String customerName;
 
-    @Column(name= "Email")
+    @Column(name= "User Name")
+    private String userName;
+
+    @Column(name = "Email")
     private String email;
+
+    @Column(name = "Password")
+    private String password;
 
     @Column(name = "Age")
     private Integer age;
