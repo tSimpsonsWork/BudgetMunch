@@ -1,6 +1,6 @@
-package com.example.project2;
-import com.example.project2.BudgetMunchCode.Budget2;
-import org.springframework.beans.factory.annotation.Autowired;
+package com.example.project2.controller;
+import com.example.project2.entity.Student;
+import com.example.project2.service.StudentService;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,13 +11,12 @@ import java.util.List;
 @Component
 public class JsonParser {
 
-    @Autowired
-    private final Budget2Service budget2Service;
+    private final StudentService studentService;
     private final ObjectMapper objectMapper;
 
     //initializing variables in json constructor
-    public JsonParser(Budget2Service budget2Service, ObjectMapper objectMapper) {
-        this.budget2Service = budget2Service;
+    public JsonParser(StudentService studentService, ObjectMapper objectMapper) {
+        this.studentService = studentService;
         this.objectMapper = objectMapper;
     }
 
@@ -25,9 +24,9 @@ public class JsonParser {
         JsonNode jsonNode = objectMapper.readTree(json);// Parsing the JSON string into a JsonNode object
         JsonNode resultsNode = jsonNode.get("results");//get results node
         //converts the jsonNode to an Array of budget objects
-        Budget2[] budget2Array = objectMapper.convertValue(resultsNode, Budget2[].class);
-        List<Budget2> budget2List = Arrays.asList(budget2Array);
+        Student[] budget2Array = objectMapper.convertValue(resultsNode, Student[].class);
+        List<Student> budget2List = Arrays.asList(budget2Array);
         //saves the list of objects using the service method from service class
-        budget2Service.saveBudget2(budget2List); // Use instance method, not static method
+        studentService.saveStudent(budget2List); // Use instance method, not static method
     }
 }

@@ -1,6 +1,4 @@
-
 package com.example.project2.entity;
-
 
 import org.springframework.stereotype.Component;
 

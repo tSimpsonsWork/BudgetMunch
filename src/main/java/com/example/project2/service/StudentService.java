@@ -1,9 +1,9 @@
 package com.example.project2.service;
 
+import com.example.project2.entity.Response;
 import com.example.project2.entity.Student;
 import com.example.project2.entity.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,6 +20,8 @@ import java.util.Random;
 @CrossOrigin("http://localhost:3000")
 public class StudentService {
     //TODO: Add a goggle map search
+    //TODO: Save a list of locations
+
     private final StudentRepository studentRepository;
 
 //    private Student student;
@@ -28,12 +30,12 @@ public class StudentService {
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
 //        this.student = student;
-
     }
 
     public void saveStudent(List<Student> student) {
-        studentRepository.saveAllAndFlush(student);
+        studentRepository.saveAll(student);
     }
+
     public void deleteAllStudents() {
         studentRepository.deleteAll();
     }
@@ -97,5 +99,4 @@ public class StudentService {
 
         return response.getBody();
     }
-
 }

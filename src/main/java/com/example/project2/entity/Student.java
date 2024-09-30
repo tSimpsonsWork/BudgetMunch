@@ -1,7 +1,9 @@
+
 package com.example.project2.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 
 @Entity
@@ -11,9 +13,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table
+@Component
 public class Student {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "Customer Name")
@@ -28,7 +32,5 @@ public class Student {
     @Column(name = "Password")
     private String password;
 
-    @Column(name = "Age")
-    private Integer age;
 
 }

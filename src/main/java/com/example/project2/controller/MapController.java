@@ -1,13 +1,8 @@
 package com.example.project2.controller;
-
-import com.example.project2.JsonParser;
-import com.example.project2.entity.Response;
 import com.example.project2.service.StudentService;
+import com.example.project2.entity.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
@@ -20,17 +15,17 @@ public class MapController {
     private final JsonParser jsonParser;
 
     @Autowired
-    public MapController(StudentService budget2Service, JsonParser jsonParser){
+    public MapController(StudentService budget2Service, JsonParser jsonParser) {
         this.studentService = budget2Service;
         this.jsonParser = jsonParser;
     }
 
     @GetMapping("/getLocation")
-    public List getGeoDetails(){
+    public List getGeoDetails() {
         //TODO: Make sure customer is added to the database and return the list
         Response responseBody = studentService.getGeoDetails();
         //return response.getBody();
         return List.of(responseBody.getResult());
-
     }
 }
+
