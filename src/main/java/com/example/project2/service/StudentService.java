@@ -8,12 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 
 @Service
 @Slf4j
@@ -44,30 +43,25 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public void addStudent() throws Exception{
-        HashSet<String> mapper = new HashSet<>();
-        String gotu = "";
-        try {
-            //TODO: Students will get deleted before new so change if you want to keep
-            List<Student> listOfStudents = new ArrayList<>();
-            for (int i = 0; i < 5; i++) {
-                Student student = new Student();
-                Random random = new Random();
-                String randomName = "Student".concat(String.valueOf(random.nextLong(1, 1000)));
-                student.setCustomerName(randomName);
-                student.setUserName(randomName.concat(String.valueOf(i)));
-                student.setEmail(randomName.concat("@fiu.edu"));
-                student.setPassword(String.valueOf(random.nextInt(1,1000)));
-                listOfStudents.add(student);
-                mapper.add(student.getEmail());
+
+ // Add this import
+
+    @CrossOrigin("http://localhost:3000") // Allow CORS for frontend
+        // Other methods...
+
+        @PostMapping("/register")
+        public ResponseEntity<String> addStudent(@RequestBody Student student) {
+            try {
+                studentRepository.save(student);
+                log.info("Student successfully added");
+                return ResponseEntity.ok("Student registered successfully.");
+            } catch (Exception e) {
+                log.error("Error adding student: {}", e.getMessage());
+                return ResponseEntity.status(500).body("Error registering student.");
             }
-            studentRepository.saveAll(listOfStudents);
-            log.info("Students successfully added");
-        }catch (Exception e){
-            log.error("Student unsuccessful added");
-            throw new Exception();
         }
-    }
+
+
 
 //    public void addStudent2() {
 //

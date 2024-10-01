@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table
+@Table(name = "students")
 @Component
 public class Student {
 
@@ -20,16 +20,16 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "Customer Name")
+    @Column(name = "name")
     private String customerName;
 
-    @Column(name= "User Name")
+    @Column(name= "username")
     private String userName;
 
-    @Column(name = "Email")
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "Password")
+    @Column(name = "password")
     private String password;
 
 

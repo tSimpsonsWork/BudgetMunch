@@ -31,8 +31,9 @@ public class Project2Application implements CommandLineRunner{
 
     @Override
 
+    //changed this
     public void run(String... args) throws Exception{
-        studentService.addStudent();
+        studentService.getStudent();
 
     }
 }
