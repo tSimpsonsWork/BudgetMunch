@@ -26,13 +26,12 @@ public class Project2Application implements CommandLineRunner{
 
     public static void main(String[] args) {
         SpringApplication.run(Project2Application.class, args);
-
     }
 
     @Override
-
     //changed this
     public void run(String... args) throws Exception{
+        studentService.getGeoDetails();
         studentService.getStudent();
 
     }
