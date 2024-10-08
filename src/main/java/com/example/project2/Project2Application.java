@@ -32,7 +32,6 @@ public class Project2Application implements CommandLineRunner{
     //changed this
     public void run(String... args) throws Exception{
         studentService.getGeoDetails();
-        studentService.getStudent();
-
+        studentService.getStudents();
     }
 }

@@ -2,6 +2,8 @@ package com.example.project2.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Map;
+
 public class Location {
     @JsonProperty("lat")
     private double lat;
@@ -9,19 +11,25 @@ public class Location {
     @JsonProperty("lng")
     private double lng;
 
+    public Location(String name, double latitude, double longitude) {
+    }
+
     public double getLat() {
         return lat;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
+    @JsonProperty("location")
+    public void setLatLng(Map<String,String>location) {
+        this.lat = (Float.parseFloat(location.get("lat")));
+        this.lng = (Float.parseFloat(location.get("lng")));
     }
 
     public double getLng() {
         return lng;
     }
 
-    public void setLng(double lng) {
-        this.lng = lng;
+    @JsonProperty("location")
+    public void setLng(Map<String,String> location) {
+        this.lng = (Float.parseFloat(location.get("lng")));
     }
 }

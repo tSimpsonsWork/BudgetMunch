@@ -1,12 +1,14 @@
 package com.example.project2.controller;
 
-import com.example.project2.entity.Response;
+import com.example.project2.entity.Results;
 import com.example.project2.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path="api/v1/budget")
@@ -33,9 +35,9 @@ public class MapController {
 
 
     @GetMapping("/getLocation")
-    public Response getGeoDetails() {
+    public List<Results> getGeoDetails() {
         // Retrieve the list of location details from the service
-        return studentService.getGeoDetails();
+        return (List<Results>) studentService.getGeoDetails();
     }
 
 

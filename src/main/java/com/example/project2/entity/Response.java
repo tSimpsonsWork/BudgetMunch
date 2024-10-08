@@ -1,9 +1,11 @@
 package com.example.project2.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Response {
     @JsonProperty("results")//json annotation allows to map to results in json
     private Results[] results;
@@ -17,4 +19,6 @@ public class Response {
     public void setResults(Results[] result) {
         this.results = results;
     }
+
+
 }

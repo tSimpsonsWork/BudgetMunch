@@ -1,152 +1,86 @@
 package com.example.project2.service;
 
-import com.example.project2.entity.Location;
-import com.example.project2.entity.Response;
-import com.example.project2.entity.Results;
-import com.example.project2.entity.Student;
-import com.example.project2.entity.repository.StudentRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.client.RestTemplate;
+import com.example.project2.entity.Response; // Importing the Response entity to handle API response.
+import com.example.project2.entity.Results; // Importing the Results entity to access lat/lng data.
+import com.example.project2.entity.Student; // Importing the Student entity for student operations.
+import com.example.project2.entity.repository.StudentRepository; // Importing the StudentRepository interface for database operations.
+import com.fasterxml.jackson.databind.ObjectMapper; // Importing ObjectMapper for converting JSON to Java objects.
+import lombok.extern.slf4j.Slf4j; // Importing Lombok for logging.
+import org.springframework.beans.factory.annotation.Autowired; // Importing for dependency injection.
+import org.springframework.http.ResponseEntity; // Importing ResponseEntity to handle HTTP responses.
+import org.springframework.stereotype.Service; // Importing Service annotation to mark this class as a service.
+import org.springframework.web.client.RestTemplate; // Importing RestTemplate for making HTTP requests.
+import java.io.IOException; // Importing IOException for handling input-output exceptions.
+import java.util.List; // Importing List for handling collections of students.
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Service
-@Slf4j
-@CrossOrigin("http://localhost:3000")
+@Service // Indicates that this class is a Spring service.
+@Slf4j // Enables logging for this class.
 public class StudentService {
-    //TODO: Add a goggle map search
-    //TODO: Save a list of locations
 
-    private final StudentRepository studentRepository;
+    private final StudentRepository studentRepository; // Declaring a final field for the student repository.
 
-//    private Student student;
-
+    // Constructor for dependency injection of the StudentRepository.
     @Autowired
     public StudentService(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
-//        this.student = student;
+        this.studentRepository = studentRepository; // Initializing the studentRepository field.
     }
 
-    public void saveStudent(List<Student> student) {
-        studentRepository.saveAll(student);
+    // Method to save a list of students to the database.
+    public void saveStudent(List<Student> students) {
+        studentRepository.saveAll(students); // Saving all student records to the repository.
     }
 
+    // Method to delete all students from the database.
     public void deleteAllStudents() {
-        studentRepository.deleteAll();
+        studentRepository.deleteAll(); // Deleting all student records from the repository.
     }
 
-    public List<Student> getStudent() {
-        return studentRepository.findAll();
+    // Method to retrieve all students from the database.
+    public List<Student> getStudents() {
+        return studentRepository.findAll(); // Returning the list of all students from the repository.
     }
 
-
- // Add this import
-
-
-
-
-
-//    public void addStudent2() {
-//
-//            ResponseEntity<Response> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=25.7562465,-80.5279754&radius=10000&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
-//                    ,Response.class);
-//
-//            Response responseBody = response.getBody();
-//            //TODO: This is where the restaurants go
-//            if (responseBody != null && responseBody.getResult() != null) {
-//                List<Result> results = List.of(responseBody.getResult());
-//                for (Result result : results) {
-//                    Student student = new Student();
-//                    student.setCustomerName(result.getName());
-//                    student.setUserName(result.getRating());
-//                    student.setEmail(result.getVicinity());
-//                    student.setPassword(result.getPrice_level());
-//                    // Set other properties as needed
-//                    //studentService.addStudent(student); // Assuming this method adds the budget2 object to the database
-//                    studentRepository.save(student);
-//                }
-//            }
-//    }
-
-//    public Response getGeoDetails(){
-//        //https://maps.googleapis.com/maps/api/place/textsearch/json?query=7785%20nw%2022%20court%20&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70
-////        ResponseEntity<Response> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/textsearch/json?query=7785%20NW%2022%20court%20&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
-////                ,Response.class);
-//        ResponseEntity<Response> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=25.7562465,-80.5279754&radius=10000&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
-//                ,Response.class);
-//
-//        return response.getBody();
-//    }
-
-    // This method retrieves geo details and returns a list of LocationDetails
-    //private static final Object apiKey = "AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70";
-    // Inside your StudentService class
+    // Method to retrieve geo details from an external API.
     public Response getGeoDetails() {
-        log.info("Starting to retrieve geo details...");
+        log.info("Starting to retrieve geo details..."); // Logging the start of the geo details retrieval.
 
-        // Make the API call
-        ResponseEntity<Response> response = new RestTemplate().getForEntity(
+        // Make the API call and capture the response as a String.
+        ResponseEntity<String> response = new RestTemplate().getForEntity(
                 "https://maps.googleapis.com/maps/api/place/textsearch/json?query=590%20nw%20114%20ave%20&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70",
-                Response.class);
+                String.class); // The URL is hardcoded for querying a specific location.
 
-        log.info("Response status: {}", response.getStatusCode());
-        log.info("Raw response body: {}", response.getBody());
+        log.info("Response status: {}", response.getStatusCode()); // Logging the HTTP status code of the response.
+        log.info("Raw response body: {}", response.getBody()); // Logging the raw JSON response received from the API.
 
+        // Checking if the response status code indicates a successful request (2xx).
         if (response.getStatusCode().is2xxSuccessful()) {
-            Response responseBody = response.getBody();
-            List<LocationDetails> locationDetailsList = new ArrayList<>();
+            // Create an ObjectMapper instance to parse the JSON response.
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                // Convert the raw JSON response to a Response object.
+                Response responseBody = objectMapper.readValue(response.getBody(), Response.class);
+                log.info("Parsed response body: {}", responseBody); // Logging the parsed response.
 
-            // Check if responseBody and results are not null
-            if (responseBody != null && responseBody.getResults() != null) { // Make sure to check for 'getResults()'
-                log.info("Response body retrieved successfully.");
-                for (Results res : responseBody.getResults()) { // Loop through results
-                    if (res.getGeometry() != null) {
-                        Location location = res.getGeometry().getLocation(); // Get Location object
-                        double latitude = location.getLat(); // Access latitude
-                        double longitude = location.getLng(); // Access longitude
-                        locationDetailsList.add(new LocationDetails(res.getName(), latitude, longitude)); // Create and add to list
-                        log.info("Retrieved location: {}, Latitude: {}, Longitude: {}", res.getName(), latitude, longitude);
-                    } else {
-                        log.warn("Geometry is null for result: {}", res);
+                // Check if responseBody and its results are not null.
+                if (responseBody != null && responseBody.getResults() != null) {
+                    log.info("Response body retrieved successfully."); // Log a success message.
+
+                    // Log the latitude and longitude of each result
+                    for (Results result : responseBody.getResults()) {
+                        log.info("Latitude: {}, Longitude: {}", result.getGeometry().getLocation().getLat(), result.getGeometry().getLocation().getLng());
                     }
+                    return responseBody; // Return the parsed Response object.
+                } else {
+                    log.warn("Response body or results are null."); // Log a warning if the response is null.
+                    return null; // Return null, or consider throwing an exception as needed.
                 }
-            } else {
-                log.warn("Response body or results are null.");
+            } catch (IOException e) {
+                log.error("Error parsing JSON response: {}", e.getMessage()); // Log an error if parsing fails.
+                return null; // Return null, or consider throwing an exception as needed.
             }
-            return response.getBody(); // Return the list of location details
         } else {
-            log.error("Failed to retrieve geo details: {}", response.getStatusCode());
-            throw new RuntimeException("Failed to retrieve geo details");
-        }
-    }
-
-    // Inner class to hold location details
-    public static class LocationDetails {
-        private String name;
-        private double latitude;
-        private double longitude;
-
-        public LocationDetails(String name, double latitude, double longitude) {
-            this.name = name;
-            this.latitude = latitude;
-            this.longitude = longitude;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public double getLatitude() {
-            return latitude;
-        }
-
-        public double getLongitude() {
-            return longitude;
+            log.error("Failed to retrieve geo details: {}", response.getStatusCode()); // Log an error for a non-successful status.
+            throw new RuntimeException("Failed to retrieve geo details"); // Throw a runtime exception for failed retrieval.
         }
     }
 }
