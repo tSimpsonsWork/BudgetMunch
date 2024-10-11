@@ -31,7 +31,7 @@ public class Project2Application implements CommandLineRunner{
     @Override
     //changed this
     public void run(String... args) throws Exception{
-        studentService.getGeoDetails();
+        //studentService.getGeoDetails();
         studentService.getStudents();
     }
 }
