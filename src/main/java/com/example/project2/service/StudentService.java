@@ -1,17 +1,18 @@
 package com.example.project2.service;
 
-import com.example.project2.entity.Response; // Importing the Response entity to handle API response.
-import com.example.project2.entity.Results; // Importing the Results entity to access lat/lng data.
-import com.example.project2.entity.Student; // Importing the Student entity for student operations.
-import com.example.project2.entity.repository.StudentRepository; // Importing the StudentRepository interface for database operations.
-import com.fasterxml.jackson.databind.ObjectMapper; // Importing ObjectMapper for converting JSON to Java objects.
-import lombok.extern.slf4j.Slf4j; // Importing Lombok for logging.
-import org.springframework.beans.factory.annotation.Autowired; // Importing for dependency injection.
-import org.springframework.http.ResponseEntity; // Importing ResponseEntity to handle HTTP responses.
-import org.springframework.stereotype.Service; // Importing Service annotation to mark this class as a service.
-import org.springframework.web.client.RestTemplate; // Importing RestTemplate for making HTTP requests.
-import java.io.IOException; // Importing IOException for handling input-output exceptions.
-import java.util.List; // Importing List for handling collections of students.
+import com.example.project2.entity.Response;
+import com.example.project2.entity.Results;
+import com.example.project2.entity.Student;
+import com.example.project2.entity.repository.StudentRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.util.List;
 
 @Service // Indicates that this class is a Spring service.
 @Slf4j // Enables logging for this class.
@@ -39,6 +40,17 @@ public class StudentService {
     public List<Student> getStudents() {
         return studentRepository.findAll(); // Returning the list of all students from the repository.
     }
+
+    public boolean existsByUsername(String username){
+        return studentRepository.findByUsername(username).isPresent();
+    }
+
+//    public Response getGeoDetails(){
+//        ResponseEntity<Response> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=25.7562465,-80.5279754&radius=10000&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
+//                ,Response.class);
+//
+//        return response.getBody();
+//    }
 
     // Method to retrieve geo details from an external API.
     public Response getGeoDetails() {

@@ -57,6 +57,11 @@ public class MapController {
         }
     }
 
+    public ResponseEntity<Boolean> checkUsername(@PathVariable String username){
+        boolean exists = studentService.existsByUsername(username);
+        return ResponseEntity.ok(exists);
+    }
+
 
     @GetMapping("/getLocation")
     public List<Results> getGeoDetails() {
