@@ -37,7 +37,11 @@ public class MapController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Student> newStudent(@RequestBody Student newStudent) {
+    public ResponseEntity<?> newStudent(@RequestBody Student newStudent) {
+        // Check if the username already exists
+        if (studentService.existsByUsername(newStudent.getUserName())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
+        }
         Student savedStudent = studentRepository.save(newStudent);
         return ResponseEntity.ok(savedStudent);
     }
@@ -57,6 +61,7 @@ public class MapController {
         }
     }
 
+    @GetMapping("/check-username/{username}")
     public ResponseEntity<Boolean> checkUsername(@PathVariable String username){
         boolean exists = studentService.existsByUsername(username);
         return ResponseEntity.ok(exists);
@@ -68,11 +73,7 @@ public class MapController {
         // Retrieve the list of location details from the service
         return (List<Results>) studentService.getGeoDetails();
     }
-
     //register new user
-
-
-
-
+    //inside controller class, do responsebody.getResults, store it as a list.of, iterate the list
 }
 

@@ -18,7 +18,7 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
     Optional<Student> findByUserNameAndPassword(String userName, String password);
 
     @Query("SELECT s FROM Student s WHERE s.userName =?1")
-    Optional<Student> findByUsername(String username);
+    Optional<Student> findByUserName(String userName);
     @Override
     void deleteAll();
 
