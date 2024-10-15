@@ -4,7 +4,9 @@ import com.example.project2.entity.Response;
 import com.example.project2.entity.Result;
 import com.example.project2.entity.Student;
 import com.example.project2.entity.repository.StudentRepository;
-import jakarta.transaction.Transactional;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,8 @@ public class StudentService {
     //TODO: Save a list of locations
 
     private final StudentRepository studentRepository;
+
+    private Result result;
 
 //    private Student student;
 
@@ -92,10 +96,30 @@ public class StudentService {
 
 
 
-    public Response getGeoDetails(){
-        ResponseEntity<Response> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=25.7562465,-80.5279754&radius=10000&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
-                ,Response.class);
+    public Response getGeoDetails() throws JsonProcessingException {
+        //https://maps.googleapis.com/maps/api/place/textsearch/json?query=7785%20nw%2022%20court%20&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70
+        ResponseEntity<String> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/geocode/json?address=7785+NW+22+court,+Pembroke+Pines,+FL&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
+                ,String.class);
 
-        return response.getBody();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        JsonNode jsonNode = objectMapper.readTree(response.getBody());// Parsing the JSON string into a JsonNode object
+        JsonNode latNode = jsonNode.findPath("location").get("lat");
+        JsonNode lngNode = jsonNode.findPath("location").get("lng");//get results node
+        log.info("this is the lat --------> {}",latNode);
+        log.info("this is the lng --------> {}",lngNode);
+        String lat = latNode.toPrettyString();
+        String lng = lngNode.toPrettyString();
+        System.out.println(response);
+//        ResponseEntity<Response> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/textsearch/json?query=7785%20NW%2022%20court%20&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
+//                ,Response.class);
+//        ResponseEntity<Response> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=25.7562465,-80.5279754&radius=10000&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
+//                ,Response.class);
+                ResponseEntity<Response> userResponse = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location="+lat+','+lng+"&radius=1000&key=AIzaSyAPQ65TLWx5-fiuXyZWgVn9-PMlRBJTb5Q"
+                ,Response.class);
+        //System.out.println(response);
+
+        return userResponse.getBody();
+
     }
 }
