@@ -1,9 +1,11 @@
 package com.example.project2.controller;
 
-import com.example.project2.entity.Results;
-import com.example.project2.entity.Student;
 import com.example.project2.entity.repository.StudentRepository;
+import com.example.project2.entity.Result;
+import com.example.project2.entity.Student;
 import com.example.project2.service.StudentService;
+import com.example.project2.entity.Response;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,9 +71,25 @@ public class MapController {
 
 
     @GetMapping("/getLocation")
-    public List<Results> getGeoDetails() {
-        // Retrieve the list of location details from the service
-        return (List<Results>) studentService.getGeoDetails();
+
+    public List getGeoDetails() throws JsonProcessingException {
+        //TODO: Make sure customer is added to the database and return the list
+        Response responseBody = studentService.getGeoDetails();
+        responseBody.getResult();
+        List<Result> list = List.of(responseBody.getResult());
+        list.forEach(post->{
+            if(post.getPrice_level()==0)
+                post.setPrice_level(100);
+            else if (post.getPrice_level()==1)
+                post.setPrice_level(200);
+            else if (post.getPrice_level()==2)
+                post.setPrice_level(300);
+            else
+                post.setPrice_level(300);
+        });
+        //return response.getBody();
+        return List.of(responseBody.getResult());
+
     }
     //register new user
     //inside controller class, do responsebody.getResults, store it as a list.of, iterate the list

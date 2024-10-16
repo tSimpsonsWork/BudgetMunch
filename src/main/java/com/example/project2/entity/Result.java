@@ -1,10 +1,9 @@
 package com.example.project2.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Results {
+public class Result {
 
     // Variables stored in the result of the JSON
     private String name;
@@ -12,8 +11,7 @@ public class Results {
     private double rating;
     private String vicinity;
 
-    @JsonProperty("geometry")
-    private Geometry geometry;
+
 
     // Getters and Setters
     public String getName() {
@@ -48,11 +46,5 @@ public class Results {
         this.vicinity = vicinity;
     }
 
-    public Geometry getGeometry() {
-        return geometry;
-    }
 
-    public void setGeometry(Geometry geometry) {
-        this.geometry = geometry;
-    }
 }

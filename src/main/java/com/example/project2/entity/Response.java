@@ -8,16 +8,16 @@ import org.springframework.stereotype.Component;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Response {
     @JsonProperty("results")//json annotation allows to map to results in json
-    private Results[] results;
+    private Result[] result;
 
     //getter method retrieved the values of the result field
-    public Results[] getResults() {
-        return results;
+    public Result[] getResult() {
+        return result;
     }
 
     //sets the value of result
-    public void setResults(Results[] result) {
-        this.results = results;
+    public void setResults(Result[] result) {
+        this.result = result;
     }
 
 
