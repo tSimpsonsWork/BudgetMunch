@@ -101,7 +101,6 @@ public class MapController {
                     break;
             }
             resultMap.put("price_level", priceLevelString); // Add the string range to the result map
-
             mappedResults.add(resultMap); // Add the modified result to the list
         });
 
