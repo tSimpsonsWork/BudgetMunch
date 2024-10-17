@@ -97,7 +97,9 @@ public class StudentService {
 
 
     public Response getGeoDetails() throws JsonProcessingException {
-        //https://maps.googleapis.com/maps/api/place/textsearch/json?query=7785%20nw%2022%20court%20&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70
+        //https://maps.googleapis.com/maps/api/geocode/json?address=7785+NW+22+court,+Pembroke+Pines,+FL&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70
+//        ResponseEntity<String> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/geocode/json?address="+ address+","+city+","+state+"&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
+//                ,String.class);
         ResponseEntity<String> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/geocode/json?address=7785+NW+22+court,+Pembroke+Pines,+FL&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
                 ,String.class);
 
