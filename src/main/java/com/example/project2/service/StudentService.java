@@ -20,6 +20,7 @@ import java.util.List;
 public class StudentService {
     private final StudentRepository studentRepository;
     private Result result;
+
     // Constructor for dependency injection of the StudentRepository.
     @Autowired
     public StudentService(StudentRepository studentRepository) {
@@ -46,7 +47,7 @@ public class StudentService {
     }
     public Response getGeoDetails() throws JsonProcessingException {
         //https://maps.googleapis.com/maps/api/place/textsearch/json?query=7785%20nw%2022%20court%20&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70
-        ResponseEntity<String> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/geocode/json?address=7785+NW+22+court,+Pembroke+Pines,+FL&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
+        ResponseEntity<String> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/geocode/json?address="+ stringFormatter("")+"&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
                 ,String.class);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -68,5 +69,18 @@ public class StudentService {
         //System.out.println(response);
 
         return userResponse.getBody();
+    }
+    //TODO: 1st getGeoDetails will handle the 1st url in which you will pass in the address as a parameter, which will return a Response that gets the lat and lon
+    //TODO: 2nd getGeoDetails will then get the lattitude and longitude from the 1st geoDetails, which will
+
+    public String stringFormatter(String message) throws JsonProcessingException{
+
+        for(int i = 0; i < message.length();i++){
+            if(message.charAt(i) == ' '){
+                message.replace(" ","+");
+            }
+        }
+        return message;
+
     }
 }

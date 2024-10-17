@@ -3,9 +3,11 @@ package com.example.project2.controller;
 import com.example.project2.entity.Response;
 import com.example.project2.entity.Result;
 import com.example.project2.entity.Student;
+import com.example.project2.entity.UserAddress;
 import com.example.project2.entity.repository.StudentRepository;
 import com.example.project2.service.StudentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import java.util.*;
 @RestController
 @RequestMapping(path="api/v1/budget")
 @CrossOrigin("http://localhost:3000")
+@Slf4j // Enables logging for this class.
 public class MapController {
 
     private final StudentService studentService;
@@ -61,6 +64,26 @@ public class MapController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }
+
+    @PostMapping("/address")
+    public ResponseEntity<?> storeAddress(@RequestBody UserAddress userAddress) throws JsonProcessingException {
+        String streetAddress = userAddress.getStreetAddress();
+        String city = userAddress.getCity();
+        String state = userAddress.getState();
+
+
+        if (streetAddress != null && !streetAddress.isEmpty() && city != null && !city.isEmpty() && state != null && !state.isEmpty()) {
+            String message = String.format("%s, %s, %s", streetAddress, city, state);
+            log.info(message);
+
+            studentService.getGeoDetails();
+            return ResponseEntity.ok(message);
+        } else {
+            log.error("Invalid!!!");
+            return ResponseEntity.badRequest().body("Invalid address data. Please provide street address, city, and state.");
+        }
+    }
+
 
     @GetMapping("/check-username/{username}")
     public ResponseEntity<Boolean> checkUsername(@PathVariable String username) {
