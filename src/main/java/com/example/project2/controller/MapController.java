@@ -14,35 +14,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-
-
 @RestController
-@RequestMapping(path="api/v1/budget")
+@RequestMapping(path = "api/v1/budget")
 @CrossOrigin("http://localhost:3000")
-@Slf4j // Enables logging for this class.
+@Slf4j
 public class MapController {
 
     private final StudentService studentService;
-    private static final Object API_KEY = "AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70";
-    //private final JsonParser jsonParser;
+    private final StudentRepository studentRepository;
 
-    @Autowired
-    private StudentRepository studentRepository;
-
-    //    @Autowired
-//    public MapController(StudentService budget2Service, JsonParser jsonParser) {
-//        this.studentService = budget2Service;
-//        this.jsonParser = jsonParser;
-//    }
     @Autowired
     public MapController(StudentService studentService, StudentRepository studentRepository) {
         this.studentService = studentService;
         this.studentRepository = studentRepository;
     }
 
+
     @PostMapping("/register")
     public ResponseEntity<?> newStudent(@RequestBody Student newStudent) {
-        // Check if the username already exists
         if (studentService.existsByUsername(newStudent.getUserName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
         }
@@ -50,20 +39,17 @@ public class MapController {
         return ResponseEntity.ok(savedStudent);
     }
 
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Student student) {
-        String username = student.getUserName();
-        String password = student.getPassword();
-
-        // Perform validation
-        Optional<Student> foundStudent = studentRepository.findByUserNameAndPassword(username, password);
+        Optional<Student> foundStudent = studentRepository.findByUserNameAndPassword(student.getUserName(), student.getPassword());
         if (foundStudent.isPresent()) {
-            // Successful login logic (return a token, etc.)
-            return ResponseEntity.ok("Login successful!"); // Adjust this response as needed
+            return ResponseEntity.ok("Login successful!");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }
+
 
     @PostMapping("/address")
     public ResponseEntity<?> storeAddress(@RequestBody UserAddress userAddress) throws JsonProcessingException {
@@ -71,43 +57,53 @@ public class MapController {
         String city = userAddress.getCity();
         String state = userAddress.getState();
 
-
         if (streetAddress != null && !streetAddress.isEmpty() && city != null && !city.isEmpty() && state != null && !state.isEmpty()) {
             String message = String.format("%s, %s, %s", streetAddress, city, state);
             log.info(message);
 
-            studentService.getGeoDetails();
-            return ResponseEntity.ok(message);
+            // Get GeoDetails from address
+            ResponseEntity<String> geoDetailsResponse = studentService.getGeoDetails(message);
+            if (geoDetailsResponse != null && geoDetailsResponse.getBody() != null) {
+                // Use the geoDetailsResponse to fetch nearby restaurants
+                Response nearbyRestaurants = studentService.getGeoDetails2(geoDetailsResponse);
+                return ResponseEntity.ok(nearbyRestaurants);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to get geo details.");
+            }
         } else {
-            log.error("Invalid!!!");
+            log.error("Invalid address data.");
             return ResponseEntity.badRequest().body("Invalid address data. Please provide street address, city, and state.");
         }
     }
 
-
+    // Check if a username exists
     @GetMapping("/check-username/{username}")
     public ResponseEntity<Boolean> checkUsername(@PathVariable String username) {
         boolean exists = studentService.existsByUsername(username);
         return ResponseEntity.ok(exists);
     }
 
+    // Fetch nearby restaurants based on stored address (pass address as a parameter)
 
     @GetMapping("/getLocation")
-    public List<Map<String, Object>> getGeoDetails() throws JsonProcessingException {
-        Response responseBody = studentService.getGeoDetails();
-        List<Result> resultList = List.of(responseBody.getResult());
+    public ResponseEntity<List<Map<String, Object>>> getGeoLocation(@RequestParam String address) throws JsonProcessingException {
+        // Get the GeoDetails for the provided address
+        ResponseEntity<String> geoDetailsResponse = studentService.getGeoDetails(address);
+        if (geoDetailsResponse == null || geoDetailsResponse.getBody() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.emptyList()); // Empty list if error
+        }
+        // Fetch nearby restaurants using the latitude and longitude
+        Response nearbyRestaurants = studentService.getGeoDetails2(geoDetailsResponse);
 
-        // Create a new list to store the mapped results
+        List<Result> resultList = List.of(nearbyRestaurants.getResult());
         List<Map<String, Object>> mappedResults = new ArrayList<>();
 
-        // Loop through each result and map the price level to a string range
         resultList.forEach(post -> {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("name", post.getName());
             resultMap.put("rating", post.getRating());
             resultMap.put("vicinity", post.getVicinity());
 
-            // Map price level to string range
             String priceLevelString;
             switch (post.getPrice_level()) {
                 case 0:
@@ -123,15 +119,12 @@ public class MapController {
                     priceLevelString = "$50+";
                     break;
             }
-            resultMap.put("price_level", priceLevelString); // Add the string range to the result map
-            mappedResults.add(resultMap); // Add the modified result to the list
+            resultMap.put("price_level", priceLevelString);
+            mappedResults.add(resultMap);
         });
 
-        return mappedResults; // Return the modified list
+        // Return the mapped results as a ResponseEntity
+        return ResponseEntity.ok(mappedResults);
     }
+
 }
-
-//register new user
-    //inside controller class, do responsebody.getResults, store it as a list.of, iterate the list
-
-

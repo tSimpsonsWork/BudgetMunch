@@ -45,21 +45,28 @@ public class StudentService {
     public boolean existsByUsername(String username){
         return studentRepository.findByUserName(username).isPresent();
     }
-    public Response getGeoDetails() throws JsonProcessingException {
+    public ResponseEntity<String> getGeoDetails(String message) throws JsonProcessingException {
         //https://maps.googleapis.com/maps/api/place/textsearch/json?query=7785%20nw%2022%20court%20&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70
-        ResponseEntity<String> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/geocode/json?address="+ stringFormatter("")+"&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
-                ,String.class);
+        String formattedAddress = stringFormatter(message);
+        log.info(formattedAddress);
+        ResponseEntity<String> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/geocode/json?address=" + formattedAddress + "&key=AIzaSyAPQ65TLWx5-fiuXyZWgVn9-PMlRBJTb5Q"
+                , String.class);
+        log.info(String.valueOf(response));
+        return response;
+    }
+
+    public Response getGeoDetails2(ResponseEntity<String> geoDetails) throws JsonProcessingException{
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        JsonNode jsonNode = objectMapper.readTree(response.getBody());// Parsing the JSON string into a JsonNode object
+        JsonNode jsonNode = objectMapper.readTree(geoDetails.getBody());// Parsing the JSON string into a JsonNode object
         JsonNode latNode = jsonNode.findPath("location").get("lat");
         JsonNode lngNode = jsonNode.findPath("location").get("lng");//get results node
         log.info("this is the lat --------> {}",latNode);
         log.info("this is the lng --------> {}",lngNode);
         String lat = latNode.toPrettyString();
         String lng = lngNode.toPrettyString();
-        System.out.println(response);
+        System.out.println(geoDetails);
 //        ResponseEntity<Response> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/textsearch/json?query=7785%20NW%2022%20court%20&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
 //                ,Response.class);
 //        ResponseEntity<Response> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=25.7562465,-80.5279754&radius=10000&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
@@ -74,13 +81,7 @@ public class StudentService {
     //TODO: 2nd getGeoDetails will then get the lattitude and longitude from the 1st geoDetails, which will
 
     public String stringFormatter(String message) throws JsonProcessingException{
-
-        for(int i = 0; i < message.length();i++){
-            if(message.charAt(i) == ' '){
-                message.replace(" ","+");
-            }
-        }
-        return message;
+        return message.replace(" ","+");
 
     }
 }
