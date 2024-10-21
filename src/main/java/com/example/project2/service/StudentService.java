@@ -47,9 +47,7 @@ public class StudentService {
     }
     public ResponseEntity<String> getGeoDetails(String message) throws JsonProcessingException {
         //https://maps.googleapis.com/maps/api/place/textsearch/json?query=7785%20nw%2022%20court%20&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70
-        String formattedAddress = stringFormatter(message);
-        log.info(formattedAddress);
-        ResponseEntity<String> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/geocode/json?address=" + formattedAddress + "&key=AIzaSyAPQ65TLWx5-fiuXyZWgVn9-PMlRBJTb5Q"
+        ResponseEntity<String> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/geocode/json?address=" + message.replace(" ","+") + "&key=AIzaSyAPQ65TLWx5-fiuXyZWgVn9-PMlRBJTb5Q"
                 , String.class);
         log.info(String.valueOf(response));
         return response;
@@ -76,12 +74,11 @@ public class StudentService {
         //System.out.println(response);
 
         return userResponse.getBody();
+
+
     }
     //TODO: 1st getGeoDetails will handle the 1st url in which you will pass in the address as a parameter, which will return a Response that gets the lat and lon
     //TODO: 2nd getGeoDetails will then get the lattitude and longitude from the 1st geoDetails, which will
 
-    public String stringFormatter(String message) throws JsonProcessingException{
-        return message.replace(" ","+");
 
-    }
 }

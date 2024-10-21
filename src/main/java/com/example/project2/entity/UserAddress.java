@@ -8,6 +8,7 @@ public class UserAddress {
     private String streetAddress;
     private String city;
     private String state;
+    private Double budget;
 
     public String getStreetAddress() {
         return streetAddress;
@@ -31,6 +32,13 @@ public class UserAddress {
 
     public void setState(String state) {
         this.state = state;
+    }
+    public Double getBudget() {
+        return budget;
+    }
+
+    public void setBudget(Double budget) {
+        this.budget = budget;
     }
 
 }

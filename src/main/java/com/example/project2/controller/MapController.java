@@ -56,6 +56,9 @@ public class MapController {
         String streetAddress = userAddress.getStreetAddress();
         String city = userAddress.getCity();
         String state = userAddress.getState();
+        Double budget = userAddress.getBudget();
+        // Double budget = userAddress.getBudget();
+        //TODO:Add budget parameter for user to input their budget,
 
         if (streetAddress != null && !streetAddress.isEmpty() && city != null && !city.isEmpty() && state != null && !state.isEmpty()) {
             String message = String.format("%s, %s, %s", streetAddress, city, state);
@@ -85,14 +88,16 @@ public class MapController {
 
     // Fetch nearby restaurants based on stored address (pass address as a parameter)
 
+
     @GetMapping("/getLocation")
-    public ResponseEntity<List<Map<String, Object>>> getGeoLocation(@RequestParam String address) throws JsonProcessingException {
+    public ResponseEntity<List<Map<String, Object>>> getGeoLocation(@RequestParam String address, @RequestParam Double budget) throws JsonProcessingException {
         // Get the GeoDetails for the provided address
         ResponseEntity<String> geoDetailsResponse = studentService.getGeoDetails(address);
         if (geoDetailsResponse == null || geoDetailsResponse.getBody() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.emptyList()); // Empty list if error
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.emptyList());
         }
-        // Fetch nearby restaurants using the latitude and longitude
+
+        // Fetch nearby restaurants
         Response nearbyRestaurants = studentService.getGeoDetails2(geoDetailsResponse);
 
         List<Result> resultList = List.of(nearbyRestaurants.getResult());
@@ -105,26 +110,53 @@ public class MapController {
             resultMap.put("vicinity", post.getVicinity());
 
             String priceLevelString;
+            //variables to store the min and max values in
+            double priceMin;
+            double priceMax;
+
+            // Handling the price levels
             switch (post.getPrice_level()) {
                 case 0:
                     priceLevelString = "$1-$10";
+                    priceMin = 1;
+                    priceMax = 10;
                     break;
                 case 1:
                     priceLevelString = "$10-$25";
+                    priceMin = 10;
+                    priceMax = 25;
                     break;
                 case 2:
                     priceLevelString = "$25-$45";
+                    priceMin = 25;
+                    priceMax = 45;
                     break;
                 default:
                     priceLevelString = "$50+";
+                    priceMin = 50;
+                    priceMax = Integer.MAX_VALUE;
                     break;
             }
-            resultMap.put("price_level", priceLevelString);
-            mappedResults.add(resultMap);
+
+            // LOGIC: If the person's budget is 25,
+            //then they should cover the costs of all restaurants under $25
+            if (budget >= priceMin ) {
+                resultMap.put("price_level", priceLevelString);
+                mappedResults.add(resultMap);}
         });
 
-        // Return the mapped results as a ResponseEntity
+        // sorting the results by price range from the HashMap
+        mappedResults.sort((a, b) -> {
+            String priceLevelA = (String) a.get("price_level");
+            String priceLevelB = (String) b.get("price_level");
+
+            // Extract the min price from price levels
+            int minPriceA = Integer.parseInt(priceLevelA.split("-")[0].replaceAll("[^\\d]", ""));
+            int minPriceB = Integer.parseInt(priceLevelB.split("-")[0].replaceAll("[^\\d]", ""));
+
+            return Integer.compare(minPriceA, minPriceB);
+        });
+
         return ResponseEntity.ok(mappedResults);
     }
-
 }
