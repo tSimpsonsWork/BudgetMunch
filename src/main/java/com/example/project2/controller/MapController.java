@@ -131,6 +131,7 @@ public class MapController {
                     priceMin = 25;
                     priceMax = 45;
                     break;
+
                 default:
                     priceLevelString = "$50+";
                     priceMin = 50;
@@ -140,7 +141,7 @@ public class MapController {
 
             // LOGIC: If the person's budget is 25,
             //then they should cover the costs of all restaurants under $25
-            if (budget >= priceMin ) {
+            if (budget > priceMin  || priceMin==1) {
                 resultMap.put("price_level", priceLevelString);
                 mappedResults.add(resultMap);}
         });
