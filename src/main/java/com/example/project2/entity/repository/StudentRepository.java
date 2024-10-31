@@ -19,6 +19,9 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
 
     @Query("SELECT s FROM Student s WHERE s.userName =?1")
     Optional<Student> findByUserName(String userName);
+
+    @Query("SELECT s FROM Student s WHERE s.email =?1")
+    Optional<Student> findByEmail(String email);
     @Override
     void deleteAll();
 

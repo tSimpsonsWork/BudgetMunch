@@ -35,9 +35,14 @@ public class MapController {
         if (studentService.existsByUsername(newStudent.getUserName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
         }
+        if (studentService.existsByEmail(newStudent.getEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists");
+        }
         Student savedStudent = studentRepository.save(newStudent);
         return ResponseEntity.ok(savedStudent);
     }
+
+
 
 
     @PostMapping("/login")
@@ -83,6 +88,12 @@ public class MapController {
     @GetMapping("/check-username/{username}")
     public ResponseEntity<Boolean> checkUsername(@PathVariable String username) {
         boolean exists = studentService.existsByUsername(username);
+        return ResponseEntity.ok(exists);
+    }
+
+    @GetMapping("/check-email/{email}")
+    public ResponseEntity<Boolean> checkEmail(@PathVariable String email) {
+        boolean exists = studentService.existsByEmail(email);
         return ResponseEntity.ok(exists);
     }
 

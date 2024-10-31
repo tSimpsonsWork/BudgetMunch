@@ -45,6 +45,10 @@ public class StudentService {
     public boolean existsByUsername(String username){
         return studentRepository.findByUserName(username).isPresent();
     }
+
+    public boolean existsByEmail(String email){
+        return studentRepository.findByEmail(email).isPresent();
+    }
     public ResponseEntity<String> getGeoDetails(String message) throws JsonProcessingException {
         //https://maps.googleapis.com/maps/api/place/textsearch/json?query=7785%20nw%2022%20court%20&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70
         ResponseEntity<String> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/geocode/json?address=" + message.replace(" ","+") + "&key=AIzaSyAPQ65TLWx5-fiuXyZWgVn9-PMlRBJTb5Q"
