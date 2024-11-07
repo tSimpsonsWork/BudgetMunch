@@ -5,6 +5,7 @@ import com.example.project2.entity.Result;
 import com.example.project2.entity.Student;
 import com.example.project2.entity.UserAddress;
 import com.example.project2.entity.repository.StudentRepository;
+import com.example.project2.service.EmailService;
 import com.example.project2.service.StudentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
@@ -19,27 +20,46 @@ import java.util.*;
 @CrossOrigin("http://localhost:3000")
 @Slf4j
 public class MapController {
+
+    /*TODO:
+       1) Look at CodewithArjun video saved on YouTube to send an e-mail
+       2) Create a method that creates random 4 digit tokens and attach that token to the email
+       3) the user must then input this token in the input box in order to change password
+       4) After this, allow the users to change the password and update it in the database
+       */
+
     private final StudentService studentService;
     private final StudentRepository studentRepository;
+    private final EmailService emailService;
 
     @Autowired
-    public MapController(StudentService studentService, StudentRepository studentRepository) {
+    public MapController(StudentService studentService, StudentRepository studentRepository, EmailService emailService) {
         this.studentService = studentService;
         this.studentRepository = studentRepository;
+        this.emailService = emailService;
     }
 
 
     @PostMapping("/register")
     public ResponseEntity<?> newStudent(@RequestBody Student newStudent) {
-        if (studentService.existsByUsername(newStudent.getUserName())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
-        }
+        List<String> errorMessages = new ArrayList<>();
         if (studentService.existsByEmail(newStudent.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists");
+            errorMessages.add("Email already exists");
         }
+        if (studentService.existsByUsername(newStudent.getUserName())) {
+            errorMessages.add("Username already exists");
+        }
+
+        log.info(errorMessages.toString());
+
+        if (!errorMessages.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessages);
+        }
+
         Student savedStudent = studentRepository.save(newStudent);
         return ResponseEntity.ok(savedStudent);
     }
+
 
 
 
@@ -170,4 +190,12 @@ public class MapController {
 
         return ResponseEntity.ok(mappedResults);
     }
+
+    @PostMapping("/send-email")
+    public String sendEmail(@RequestParam String to, @RequestParam String subject, @RequestParam String body) {
+        emailService.sendEmail(to, subject, body);
+        return "Email sent successfully!";
+    }
+
+
 }
