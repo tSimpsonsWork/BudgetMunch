@@ -19,18 +19,20 @@ import java.util.*;
 @RequestMapping(path = "api/v1/budget")
 @CrossOrigin("http://localhost:3000")
 @Slf4j
+@SessionAttributes("resetCodes") //Stores the reset codes temporarily
 public class MapController {
 
     /*TODO:
-       1) Look at CodewithArjun video saved on YouTube to send an e-mail
-       2) Create a method that creates random 4 digit tokens and attach that token to the email
-       3) the user must then input this token in the input box in order to change password
+       1) COMPLETE: Look at CodewithArjun video saved on YouTube to send an e-mail
+       2)COMPLETE: Create a method that creates random 4 digit tokens and attach that token to the email
+       3) COMPLETE ----but need to change the localhost pop-up error to be just a regular error--:the user must then input this token in the input box in order to change password
        4) After this, allow the users to change the password and update it in the database
        */
 
     private final StudentService studentService;
     private final StudentRepository studentRepository;
     private final EmailService emailService;
+    private final Map<String, String> resetCodes = new HashMap<>();
 
     @Autowired
     public MapController(StudentService studentService, StudentRepository studentRepository, EmailService emailService) {
@@ -59,9 +61,6 @@ public class MapController {
         Student savedStudent = studentRepository.save(newStudent);
         return ResponseEntity.ok(savedStudent);
     }
-
-
-
 
 
     @PostMapping("/login")
@@ -171,9 +170,10 @@ public class MapController {
 
             // LOGIC: If the person's budget is 25,
             //then they should cover the costs of all restaurants under $25
-            if (budget > priceMin  || priceMin==1) {
+            if (budget > priceMin || priceMin == 1) {
                 resultMap.put("price_level", priceLevelString);
-                mappedResults.add(resultMap);}
+                mappedResults.add(resultMap);
+            }
         });
 
         // sorting the results by price range from the HashMap
@@ -191,11 +191,39 @@ public class MapController {
         return ResponseEntity.ok(mappedResults);
     }
 
-    @PostMapping("/send-email")
-    public String sendEmail(@RequestParam String to, @RequestParam String subject, @RequestParam String body) {
-        emailService.sendEmail(to, subject, body);
-        return "Email sent successfully!";
+    //this generates a 4 digit code
+    private String generateCode() {
+        int code = (int) (Math.random() * 9000) + 1000;
+        return String.valueOf(code);
     }
 
+    //Here I don't need to check for email because email was already checked in the front end
+    @PostMapping("/send-email")
+    public ResponseEntity<String> sendResetPassEmail(@RequestParam String to) {
+        String code = generateCode();
+        String subject = "Password Reset Code";
+        String body = "Your password reset code is: " + code;
+        //Store the code temporarily, such as in-memory storage or in the Student Entity (must work on)
+        resetCodes.put(to, code);//here we are mapping the resetCode to the user email
+        emailService.sendEmail(to, subject, body);
+        return ResponseEntity.ok("Email sent successfully!");
+    }
+
+    //Endpoint to verify code
+    @PostMapping("/verify-code")
+    public ResponseEntity<String> verifyCode(@RequestParam String email, @RequestParam String code) {
+        String storedCode = resetCodes.get(email);
+        if (storedCode != null && storedCode.equals(code)) {
+            resetCodes.remove(email); // Remove code once verified
+            return ResponseEntity.ok("Code has been verified");
+        } else {
+            log.error("Invalid attempt with code: {} for email: {}", code, email); // Add logging here
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired code");
+        }
+    }
 
 }
+
+
+
+
