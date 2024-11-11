@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -20,6 +21,9 @@ import java.util.List;
 public class StudentService {
     private final StudentRepository studentRepository;
     private Result result;
+
+    @Value("${api.key}")
+    private String apiKey;
 
     // Constructor for dependency injection of the StudentRepository.
     @Autowired
@@ -51,7 +55,7 @@ public class StudentService {
     }
     public ResponseEntity<String> getGeoDetails(String message) throws JsonProcessingException {
         //https://maps.googleapis.com/maps/api/place/textsearch/json?query=7785%20nw%2022%20court%20&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70
-        ResponseEntity<String> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/geocode/json?address=" + message.replace(" ","+") + "&key=AIzaSyAPQ65TLWx5-fiuXyZWgVn9-PMlRBJTb5Q"
+        ResponseEntity<String> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/geocode/json?address=" + message.replace(" ","+") + "&key="+apiKey
                 , String.class);
         //log.info(String.valueOf(response));
         return response;
@@ -94,11 +98,11 @@ public class StudentService {
             log.info("this is the lng --------> {}", lngNode);
             String lat = latNode.toPrettyString();
             String lng = lngNode.toPrettyString();
-            ResponseEntity<Response> userResponse = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=" + lat + ',' + lng + "&radius=1000&key=AIzaSyAPQ65TLWx5-fiuXyZWgVn9-PMlRBJTb5Q"
+            ResponseEntity<Response> userResponse = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=" + lat + ',' + lng + "&radius=1000&key="+apiKey
                     , Response.class);
             return userResponse.getBody();
         }else{
-            ResponseEntity<Response> userResponse = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=\"\"&radius=1000&key=AIzaSyAPQ65TLWx5-fiuXyZWgVn9-PMlRBJTb5Q"
+            ResponseEntity<Response> userResponse = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=\"\"&radius=1000&key="+apiKey
                     , Response.class);
             return userResponse.getBody();
         }
