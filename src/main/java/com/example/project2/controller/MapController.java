@@ -222,6 +222,20 @@ public class MapController {
         }
     }
 
+    @PostMapping("password-reset")
+    public ResponseEntity<String> newPassword(@RequestParam String email, @RequestParam String newPassword){
+        //Logic here to update the password of the user whose e-mail goes with the account
+        Optional<Student> studentOptional = studentRepository.findByEmail(email);
+        if(studentOptional.isPresent()){
+            Student student= studentOptional.get();
+            student.setPassword(newPassword);
+            studentRepository.save(student);
+            return ResponseEntity.ok("Password has been reset successfully");
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found.");
+        }
+    }
+
 }
 
 
