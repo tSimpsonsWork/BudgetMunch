@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -20,6 +21,9 @@ import java.util.List;
 public class StudentService {
     private final StudentRepository studentRepository;
     private Result result;
+
+    @Value("${api.key}")
+    private String apiKey;
 
     // Constructor for dependency injection of the StudentRepository.
     @Autowired
@@ -51,9 +55,9 @@ public class StudentService {
     }
     public ResponseEntity<String> getGeoDetails(String message) throws JsonProcessingException {
         //https://maps.googleapis.com/maps/api/place/textsearch/json?query=7785%20nw%2022%20court%20&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70
-        ResponseEntity<String> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/geocode/json?address=" + message.replace(" ","+") + "&key=AIzaSyAPQ65TLWx5-fiuXyZWgVn9-PMlRBJTb5Q"
+        ResponseEntity<String> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/geocode/json?address=" + message.replace(" ","+") + "&key="+apiKey
                 , String.class);
-        log.info(String.valueOf(response));
+        //log.info(String.valueOf(response));
         return response;
     }
 
@@ -62,22 +66,47 @@ public class StudentService {
         ObjectMapper objectMapper = new ObjectMapper();
 
         JsonNode jsonNode = objectMapper.readTree(geoDetails.getBody());// Parsing the JSON string into a JsonNode object
-        JsonNode latNode = jsonNode.findPath("location").get("lat");
-        JsonNode lngNode = jsonNode.findPath("location").get("lng");//get results node
-        log.info("this is the lat --------> {}",latNode);
-        log.info("this is the lng --------> {}",lngNode);
-        String lat = latNode.toPrettyString();
-        String lng = lngNode.toPrettyString();
-        System.out.println(geoDetails);
-//        ResponseEntity<Response> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/textsearch/json?query=7785%20NW%2022%20court%20&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
-//                ,Response.class);
-//        ResponseEntity<Response> response = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=25.7562465,-80.5279754&radius=10000&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70"
-//                ,Response.class);
-                ResponseEntity<Response> userResponse = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location="+lat+','+lng+"&radius=1000&key=AIzaSyAPQ65TLWx5-fiuXyZWgVn9-PMlRBJTb5Q"
-                ,Response.class);
-        //System.out.println(response);
 
-        return userResponse.getBody();
+        // Extract the address_components array
+        JsonNode addressComponents = jsonNode.findPath("address_components");
+
+        boolean streetNumberExists = false;
+        boolean routeExists = false;
+
+        // Loop to check for street_number and route
+        for (JsonNode component : addressComponents) {
+            JsonNode types = component.path("types");
+            for (JsonNode type : types) {
+                if (type.asText().equals("street_number")) {
+                    streetNumberExists = true;
+                } else if (type.asText().equals("route")) {
+                    routeExists = true;
+                }
+            }
+            // Exit early if both are found
+            if (streetNumberExists && routeExists) break;
+        }
+
+        // Output result
+        log.info("this is the street address --------> {}",streetNumberExists);
+        log.info("this is the route --------> {}",routeExists);
+        if(streetNumberExists  &&routeExists) {
+            JsonNode latNode = jsonNode.findPath("location").get("lat");
+            JsonNode lngNode = jsonNode.findPath("location").get("lng");//get results node
+
+            log.info("this is the lat --------> {}", latNode);
+            log.info("this is the lng --------> {}", lngNode);
+            String lat = latNode.toPrettyString();
+            String lng = lngNode.toPrettyString();
+            ResponseEntity<Response> userResponse = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=" + lat + ',' + lng + "&radius=1000&key="+apiKey
+                    , Response.class);
+            return userResponse.getBody();
+        }else{
+            ResponseEntity<Response> userResponse = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=\"\"&radius=1000&key="+apiKey
+                    , Response.class);
+            return userResponse.getBody();
+        }
+
 
 
     }
