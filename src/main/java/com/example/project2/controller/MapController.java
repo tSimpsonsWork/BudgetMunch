@@ -5,6 +5,7 @@ import com.example.project2.entity.Result;
 import com.example.project2.entity.Student;
 import com.example.project2.entity.UserAddress;
 import com.example.project2.entity.repository.StudentRepository;
+import com.example.project2.service.EmailService;
 import com.example.project2.service.StudentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
@@ -18,31 +19,48 @@ import java.util.*;
 @RequestMapping(path = "api/v1/budget")
 @CrossOrigin("http://localhost:3000")
 @Slf4j
+@SessionAttributes("resetCodes") //Stores the reset codes temporarily
 public class MapController {
+
+    /*TODO:
+       1) COMPLETE: Look at CodewithArjun video saved on YouTube to send an e-mail
+       2)COMPLETE: Create a method that creates random 4 digit tokens and attach that token to the email
+       3) COMPLETE ----but need to change the localhost pop-up error to be just a regular error--:the user must then input this token in the input box in order to change password
+       4) After this, allow the users to change the password and update it in the database
+       */
 
     private final StudentService studentService;
     private final StudentRepository studentRepository;
+    private final EmailService emailService;
+    private final Map<String, String> resetCodes = new HashMap<>();
 
     @Autowired
-    public MapController(StudentService studentService, StudentRepository studentRepository) {
+    public MapController(StudentService studentService, StudentRepository studentRepository, EmailService emailService) {
         this.studentService = studentService;
         this.studentRepository = studentRepository;
+        this.emailService = emailService;
     }
 
 
     @PostMapping("/register")
     public ResponseEntity<?> newStudent(@RequestBody Student newStudent) {
-        if (studentService.existsByUsername(newStudent.getUserName())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
-        }
+        List<String> errorMessages = new ArrayList<>();
         if (studentService.existsByEmail(newStudent.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists");
+            errorMessages.add("Email already exists");
         }
+        if (studentService.existsByUsername(newStudent.getUserName())) {
+            errorMessages.add("Username already exists");
+        }
+
+        log.info(errorMessages.toString());
+
+        if (!errorMessages.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessages);
+        }
+
         Student savedStudent = studentRepository.save(newStudent);
         return ResponseEntity.ok(savedStudent);
     }
-
-
 
 
     @PostMapping("/login")
@@ -152,9 +170,10 @@ public class MapController {
 
             // LOGIC: If the person's budget is 25,
             //then they should cover the costs of all restaurants under $25
-            if (budget > priceMin  || priceMin==1) {
+            if (budget > priceMin || priceMin == 1) {
                 resultMap.put("price_level", priceLevelString);
-                mappedResults.add(resultMap);}
+                mappedResults.add(resultMap);
+            }
         });
 
         // sorting the results by price range from the HashMap
@@ -171,4 +190,54 @@ public class MapController {
 
         return ResponseEntity.ok(mappedResults);
     }
+
+    //this generates a 4 digit code
+    private String generateCode() {
+        int code = (int) (Math.random() * 9000) + 1000;
+        return String.valueOf(code);
+    }
+
+    //Here I don't need to check for email because email was already checked in the front end
+    @PostMapping("/send-email")
+    public ResponseEntity<String> sendResetPassEmail(@RequestParam String to) {
+        String code = generateCode();
+        String subject = "Password Reset Code";
+        String body = "Your password reset code is: " + code;
+        //Store the code temporarily, such as in-memory storage or in the Student Entity (must work on)
+        resetCodes.put(to, code);//here we are mapping the resetCode to the user email
+        emailService.sendEmail(to, subject, body);
+        return ResponseEntity.ok("Email sent successfully!");
+    }
+
+    //Endpoint to verify code
+    @PostMapping("/verify-code")
+    public ResponseEntity<String> verifyCode(@RequestParam String email, @RequestParam String code) {
+        String storedCode = resetCodes.get(email);
+        if (storedCode != null && storedCode.equals(code)) {
+            resetCodes.remove(email); // Remove code once verified
+            return ResponseEntity.ok("Code has been verified");
+        } else {
+            log.error("Invalid attempt with code: {} for email: {}", code, email); // Add logging here
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired code");
+        }
+    }
+
+    @PostMapping("password-reset")
+    public ResponseEntity<String> newPassword(@RequestParam String email, @RequestParam String newPassword){
+        //Logic here to update the password of the user whose e-mail goes with the account
+        Optional<Student> studentOptional = studentRepository.findByEmail(email);
+        if(studentOptional.isPresent()){
+            Student student= studentOptional.get();
+            student.setPassword(newPassword);
+            studentRepository.save(student);
+            return ResponseEntity.ok("Password has been reset successfully");
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found.");
+        }
+    }
+
 }
+
+
+
+
