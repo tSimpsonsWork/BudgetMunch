@@ -1,9 +1,9 @@
 package com.example.project2.service;
 
 import com.example.project2.entity.Response;
-import com.example.project2.entity.Student;
+import com.example.project2.entity.User;
 import com.example.project2.entity.Result;
-import com.example.project2.entity.repository.StudentRepository;
+import com.example.project2.entity.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,40 +18,40 @@ import java.util.List;
 
 @Service // Indicates that this class is a Spring service.
 @Slf4j // Enables logging for this class.
-public class StudentService {
-    private final StudentRepository studentRepository;
+public class UserService {
+    private final UserRepository userRepository;
     private Result result;
 
     @Value("${api.key}")
     private String apiKey;
 
-    // Constructor for dependency injection of the StudentRepository.
+    // Constructor for dependency injection of the UserRepository.
     @Autowired
-    public StudentService(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository; // Initializing the studentRepository field.
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository; // Initializing the UserRepository field.
     }
 
-    // Method to save a list of students to the database.
-    public void saveStudent(List<Student> students) {
-        studentRepository.saveAll(students); // Saving all student records to the repository.
+    // Method to save a list of users to the database.
+    public void saveUser(List<User> users) {
+        userRepository.saveAll(users); // Saving all user records to the repository.
     }
 
-    // Method to delete all students from the database.
-    public void deleteAllStudents() {
-        studentRepository.deleteAll(); // Deleting all student records from the repository.
+    // Method to delete all users from the database.
+    public void deleteAllUser() {
+        userRepository.deleteAll(); // Deleting all user records from the repository.
     }
 
-    // Method to retrieve all students from the database.
-    public List<Student> getStudents() {
-        return studentRepository.findAll(); // Returning the list of all students from the repository.
+    // Method to retrieve all users from the database.
+    public List<User> getUsers() {
+        return userRepository.findAll(); // Returning the list of all users from the repository.
     }
 
     public boolean existsByUsername(String username){
-        return studentRepository.findByUserName(username).isPresent();
+        return userRepository.findByUserName(username).isPresent();
     }
 
     public boolean existsByEmail(String email){
-        return studentRepository.findByEmail(email).isPresent();
+        return userRepository.findByEmail(email).isPresent();
     }
     public ResponseEntity<String> getGeoDetails(String message) throws JsonProcessingException {
         //https://maps.googleapis.com/maps/api/place/textsearch/json?query=7785%20nw%2022%20court%20&key=AIzaSyAaheJOXHcdlFq7UWAe7vuumLPeNdUaW70

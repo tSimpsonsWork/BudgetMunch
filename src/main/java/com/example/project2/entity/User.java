@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "students")
+@Table(name = "users")
 @Component
-public class Student {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

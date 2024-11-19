@@ -2,11 +2,11 @@ package com.example.project2.controller;
 
 import com.example.project2.entity.Response;
 import com.example.project2.entity.Result;
-import com.example.project2.entity.Student;
+import com.example.project2.entity.User;
 import com.example.project2.entity.UserAddress;
-import com.example.project2.entity.repository.StudentRepository;
+import com.example.project2.entity.repository.UserRepository;
 import com.example.project2.service.EmailService;
-import com.example.project2.service.StudentService;
+import com.example.project2.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,26 +29,26 @@ public class MapController {
        4) After this, allow the users to change the password and update it in the database
        */
 
-    private final StudentService studentService;
-    private final StudentRepository studentRepository;
+    private final UserService userService;
+    private final UserRepository userRepository;
     private final EmailService emailService;
     private final Map<String, String> resetCodes = new HashMap<>();
 
     @Autowired
-    public MapController(StudentService studentService, StudentRepository studentRepository, EmailService emailService) {
-        this.studentService = studentService;
-        this.studentRepository = studentRepository;
+    public MapController(UserService userService, UserRepository userRepository, EmailService emailService) {
+        this.userService = userService;
+        this.userRepository = userRepository;
         this.emailService = emailService;
     }
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> newStudent(@RequestBody Student newStudent) {
+    public ResponseEntity<?> newUser(@RequestBody User newUser) {
         List<String> errorMessages = new ArrayList<>();
-        if (studentService.existsByEmail(newStudent.getEmail())) {
+        if (userService.existsByEmail(newUser.getEmail())) {
             errorMessages.add("Email already exists");
         }
-        if (studentService.existsByUsername(newStudent.getUserName())) {
+        if (userService.existsByUsername(newUser.getUserName())) {
             errorMessages.add("Username already exists");
         }
 
@@ -58,15 +58,15 @@ public class MapController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessages);
         }
 
-        Student savedStudent = studentRepository.save(newStudent);
-        return ResponseEntity.ok(savedStudent);
+        User savedUser = userRepository.save(newUser);
+        return ResponseEntity.ok(savedUser);
     }
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Student student) {
-        Optional<Student> foundStudent = studentRepository.findByUserNameAndPassword(student.getUserName(), student.getPassword());
-        if (foundStudent.isPresent()) {
+    public ResponseEntity<?> login(@RequestBody User user) {
+        Optional<User> foundUser = userRepository.findByUserNameAndPassword(user.getUserName(), user.getPassword());
+        if (foundUser.isPresent()) {
             return ResponseEntity.ok("Login successful!");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
@@ -88,10 +88,10 @@ public class MapController {
             log.info(message);
 
             // Get GeoDetails from address
-            ResponseEntity<String> geoDetailsResponse = studentService.getGeoDetails(message);
+            ResponseEntity<String> geoDetailsResponse = userService.getGeoDetails(message);
             if (geoDetailsResponse != null && geoDetailsResponse.getBody() != null) {
                 // Use the geoDetailsResponse to fetch nearby restaurants
-                Response nearbyRestaurants = studentService.getGeoDetails2(geoDetailsResponse);
+                Response nearbyRestaurants = userService.getGeoDetails2(geoDetailsResponse);
                 return ResponseEntity.ok(nearbyRestaurants);
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to get geo details.");
@@ -105,13 +105,13 @@ public class MapController {
     // Check if a username exists
     @GetMapping("/check-username/{username}")
     public ResponseEntity<Boolean> checkUsername(@PathVariable String username) {
-        boolean exists = studentService.existsByUsername(username);
+        boolean exists = userService.existsByUsername(username);
         return ResponseEntity.ok(exists);
     }
 
     @GetMapping("/check-email/{email}")
     public ResponseEntity<Boolean> checkEmail(@PathVariable String email) {
-        boolean exists = studentService.existsByEmail(email);
+        boolean exists = userService.existsByEmail(email);
         return ResponseEntity.ok(exists);
     }
 
@@ -121,13 +121,13 @@ public class MapController {
     @GetMapping("/getLocation")
     public ResponseEntity<List<Map<String, Object>>> getGeoLocation(@RequestParam String address, @RequestParam Double budget) throws JsonProcessingException {
         // Get the GeoDetails for the provided address
-        ResponseEntity<String> geoDetailsResponse = studentService.getGeoDetails(address);
+        ResponseEntity<String> geoDetailsResponse = userService.getGeoDetails(address);
         if (geoDetailsResponse == null || geoDetailsResponse.getBody() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.emptyList());
         }
 
         // Fetch nearby restaurants
-        Response nearbyRestaurants = studentService.getGeoDetails2(geoDetailsResponse);
+        Response nearbyRestaurants = userService.getGeoDetails2(geoDetailsResponse);
 
         List<Result> resultList = List.of(nearbyRestaurants.getResult());
         List<Map<String, Object>> mappedResults = new ArrayList<>();
@@ -203,7 +203,7 @@ public class MapController {
         String code = generateCode();
         String subject = "Password Reset Code";
         String body = "Your password reset code is: " + code;
-        //Store the code temporarily, such as in-memory storage or in the Student Entity (must work on)
+        //Store the code temporarily, such as in-memory storage or in the user Entity (must work on)
         resetCodes.put(to, code);//here we are mapping the resetCode to the user email
         emailService.sendEmail(to, subject, body);
         return ResponseEntity.ok("Email sent successfully!");
@@ -225,11 +225,11 @@ public class MapController {
     @PostMapping("password-reset")
     public ResponseEntity<String> newPassword(@RequestParam String email, @RequestParam String newPassword){
         //Logic here to update the password of the user whose e-mail goes with the account
-        Optional<Student> studentOptional = studentRepository.findByEmail(email);
-        if(studentOptional.isPresent()){
-            Student student= studentOptional.get();
-            student.setPassword(newPassword);
-            studentRepository.save(student);
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if(userOptional.isPresent()){
+            User user = userOptional.get();
+            user.setPassword(newPassword);
+            userRepository.save(user);
             return ResponseEntity.ok("Password has been reset successfully");
         }else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found.");

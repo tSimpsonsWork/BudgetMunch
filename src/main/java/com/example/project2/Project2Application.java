@@ -1,8 +1,8 @@
 package com.example.project2;
 
-import com.example.project2.entity.Student;
+import com.example.project2.entity.User;
 import com.example.project2.service.EmailService;
-import com.example.project2.service.StudentService;
+import com.example.project2.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -14,17 +14,17 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @Slf4j
 public class Project2Application implements CommandLineRunner{
 
-    private final StudentService studentService;
+    private final UserService userService;
 
-    private Student student;
+    private User user;
 
     @Autowired
     private EmailService emailService;
 
     @Autowired
-    public Project2Application(StudentService studentService, Student student){
-        this.studentService = studentService;
-        this.student = student;
+    public Project2Application(UserService userService, User user){
+        this.userService = userService;
+        this.user = user;
     }
 
     public static void main(String[] args) {
@@ -35,7 +35,7 @@ public class Project2Application implements CommandLineRunner{
     //changed this
     public void run(String... args) throws Exception{
         //studentService.getGeoDetails();
-        studentService.getStudents();
+        userService.getUsers();
     }
 
 //    @EventListener(ApplicationReadyEvent.class)
