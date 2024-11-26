@@ -62,13 +62,24 @@ public class MapController {
         return ResponseEntity.ok(savedUser);
     }
 
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
+        log.error("Username: " + user.getUserName());
+        log.error("Password: " + user.getPassword());
         Optional<User> foundUser = userRepository.findByUserNameAndPassword(user.getUserName(), user.getPassword());
         if (foundUser.isPresent()) {
-            return ResponseEntity.ok("Login successful!");
+            User loggedInUser = foundUser.get();
+            Map<String, String> userDetails = new HashMap<>();
+            userDetails.put("customerName", loggedInUser.getCustomerName());
+            userDetails.put("username", loggedInUser.getUserName());
+            userDetails.put("email", loggedInUser.getEmail());
+            log.info("user details: {}", userDetails.get("customerName"));
+            log.info("user details: {}", userDetails.get("username"));
+            log.info("user details: {}", userDetails.get("email"));
+            return ResponseEntity.ok(userDetails); // Return user details as JSON
+
         } else {
+            log.error("Login failed :(");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }
