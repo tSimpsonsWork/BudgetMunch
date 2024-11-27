@@ -88,14 +88,9 @@ public class UserService {
         }
 
         // Output result
-        log.info("this is the street address --------> {}",streetNumberExists);
-        log.info("this is the route --------> {}",routeExists);
         if(streetNumberExists  &&routeExists) {
             JsonNode latNode = jsonNode.findPath("location").get("lat");
             JsonNode lngNode = jsonNode.findPath("location").get("lng");//get results node
-
-            log.info("this is the lat --------> {}", latNode);
-            log.info("this is the lng --------> {}", lngNode);
             String lat = latNode.toPrettyString();
             String lng = lngNode.toPrettyString();
             ResponseEntity<Response> userResponse = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=" + lat + ',' + lng + "&radius=1000&key="+apiKey
