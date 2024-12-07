@@ -72,7 +72,7 @@ git clone https://github.com/tSimpsonsWork/BudgetMunch.git
 
 3) Build the project:
 
-/mvnw clean package -DskipTests
+./mvnw clean package -DskipTests
 
 
 4) Run the application:
