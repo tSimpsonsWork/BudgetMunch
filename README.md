@@ -73,7 +73,7 @@ git clone https://github.com/tSimpsonsWork/BudgetMunch.git
 3) Build the project:
 
 ./mvnw clean package -DskipTests
-![Screenshot 2024-12-06 at 10.10.03 PM.png](..%2FScreenshot%202024-12-06%20at%2010.10.03%E2%80%AFPM.png)
+
 
 <img width="648" alt="Screenshot 2024-12-06 at 10 10 03 PM" src="https://github.com/user-attachments/assets/ff555307-f1b7-41ee-99d0-f9a20c732973">
 
@@ -84,7 +84,8 @@ git clone https://github.com/tSimpsonsWork/BudgetMunch.git
 
 java -jar target/Project2-0.0.1-SNAPSHOT.jar
 
-![Screenshot 2024-12-06 at 10.13.37 PM.png](..%2FScreenshot%202024-12-06%20at%2010.13.37%E2%80%AFPM.png)
+<img width="1464" alt="Screenshot 2024-12-06 at 10 13 37 PM" src="https://github.com/user-attachments/assets/791eeffd-66cb-46bf-9127-75d199664a90">
+
 
 5) The application will automatically create tables based on the JPA configuration. [Once run JPA will created database tables]
 
