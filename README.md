@@ -53,7 +53,7 @@ An Application designed to help users budget select food choices in their immedi
 
 * Prerequisites
 * Java: Ensure JDK 17.
-* Maven: Ensure Maven is installed.
+* Maven: Ensure Maven is installed [Wrapper works].
 * .env [_**very important**_]
 * PostgreSQL: Ensure PostgreSQL is running and configured.
 * Google Maps API Key: Obtain an API key from Google Cloud Console.
@@ -73,11 +73,14 @@ git clone https://github.com/tSimpsonsWork/BudgetMunch.git
 3) Build the project:
 
 ./mvnw clean package -DskipTests
+![Screenshot 2024-12-06 at 10.10.03 PM.png](..%2FScreenshot%202024-12-06%20at%2010.10.03%E2%80%AFPM.png)
 
 
 4) Run the application:
 
 java -jar target/Project2-0.0.1-SNAPSHOT.jar
+
+![Screenshot 2024-12-06 at 10.13.37 PM.png](..%2FScreenshot%202024-12-06%20at%2010.13.37%E2%80%AFPM.png)
 
 5) The application will automatically create tables based on the JPA configuration. [Once run JPA will created database tables]
 
