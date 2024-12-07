@@ -1,5 +1,5 @@
 # BudgetMunch
-An Application designed to help users budget select food choices in their immediate area. 
+An Application designed to help users budget select food choices in their immediate area. This backend uses spring to create a database interactive api using dependencies such as: Spring JPA & Spring Web  
 
 ## **Table of Contents**
 
@@ -68,6 +68,10 @@ git clone https://github.com/tSimpsonsWork/BudgetMunch.git
    2. DATASOURCE_USER=
    3. DATASOURCE_PASSWORD=
    4. _**API_KEY**_=
+  
+
+* API Key: https://developers.google.com/maps/documentation/javascript/get-api-key
+<img width="810" alt="Screenshot 2024-12-06 at 10 37 57 PM" src="https://github.com/user-attachments/assets/fe2be452-8981-4dc5-9b35-2a7c6d661c68">
 
 
 3) Build the project:
