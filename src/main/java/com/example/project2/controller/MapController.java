@@ -47,10 +47,10 @@ public class MapController {
         List<String> errorMessages = new ArrayList<>();
         if (userService.existsByEmail(newUser.getEmail())) {
             errorMessages.add("Email already exists");
-        }
+        }//verifies the user's email exists to prevent duplicated email
         if (userService.existsByUsername(newUser.getUserName())) {
             errorMessages.add("Username already exists");
-        }
+        }//errors for existing duplicated email
 
         log.info(errorMessages.toString());
 

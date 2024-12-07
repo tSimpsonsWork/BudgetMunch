@@ -25,5 +25,5 @@ public class EmailService {
         mailSender.send(message);
 
         System.out.println("Mail Sent successfully...");
-    }
+    }//sends a forget password from BudgetMunchTeam@gmail.com
 }

@@ -38,10 +38,4 @@ public class Project2Application implements CommandLineRunner{
         userService.getUsers();
     }
 
-//    @EventListener(ApplicationReadyEvent.class)
-//    public void sendMail(){
-//        emailService.sendEmail("arely.corre@hotmail.com",
-//                "This is the subject",
-//                "This is the Body of Email");
-//    }
 }

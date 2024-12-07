@@ -22,7 +22,7 @@ public class UserService {
     private final UserRepository userRepository;
     private Result result;
 
-    @Value("${api.key}")
+    @Value("${api.key}")//holds api key
     private String apiKey;
 
     // Constructor for dependency injection of the UserRepository.
@@ -90,8 +90,8 @@ public class UserService {
         if(streetNumberExists  &&routeExists) {
             JsonNode latNode = jsonNode.findPath("location").get("lat");
             JsonNode lngNode = jsonNode.findPath("location").get("lng");//get results node
-            String lat = latNode.toPrettyString();
-            String lng = lngNode.toPrettyString();
+            String lat = latNode.toPrettyString();//gets latitude for goolge maps api
+            String lng = lngNode.toPrettyString();//gets longitude for goolge maps api
             ResponseEntity<Response> userResponse = new RestTemplate().getForEntity("https://maps.googleapis.com/maps/api/place/nearbysearch/json?&keyword=restaurant&location=" + lat + ',' + lng + "&radius=1000&key="+apiKey
                     , Response.class);
             return userResponse.getBody();
@@ -104,8 +104,6 @@ public class UserService {
 
 
     }
-    //TODO: 1st getGeoDetails will handle the 1st url in which you will pass in the address as a parameter, which will return a Response that gets the lat and lon
-    //TODO: 2nd getGeoDetails will then get the lattitude and longitude from the 1st geoDetails, which will
 
 
 }

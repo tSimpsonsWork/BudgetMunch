@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserAddress {
-
+    //class holds the restaurants locations nearby
     private String streetAddress;
     private String city;
     private String state;

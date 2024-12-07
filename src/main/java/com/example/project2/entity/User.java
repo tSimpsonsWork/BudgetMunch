@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Table(name = "users")
 @Component
 public class User {
-
+    //creates the tables for database
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
