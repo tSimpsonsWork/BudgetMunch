@@ -75,6 +75,10 @@ git clone https://github.com/tSimpsonsWork/BudgetMunch.git
 ./mvnw clean package -DskipTests
 ![Screenshot 2024-12-06 at 10.10.03 PM.png](..%2FScreenshot%202024-12-06%20at%2010.10.03%E2%80%AFPM.png)
 
+<img width="648" alt="Screenshot 2024-12-06 at 10 10 03 PM" src="https://github.com/user-attachments/assets/ff555307-f1b7-41ee-99d0-f9a20c732973">
+
+
+
 
 4) Run the application:
 
