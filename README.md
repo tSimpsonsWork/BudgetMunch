@@ -76,10 +76,11 @@ git clone https://github.com/tSimpsonsWork/BudgetMunch.git
 
 3) Build the project:
 
-./mvnw clean package -DskipTests
+./mvnw clean package
+
+<img width="786" alt="Screenshot 2024-12-11 at 6 07 49 PM" src="https://github.com/user-attachments/assets/9a416135-22ea-4a10-8d17-3d3bdde17c07" />
 
 
-<img width="648" alt="Screenshot 2024-12-06 at 10 10 03 PM" src="https://github.com/user-attachments/assets/ff555307-f1b7-41ee-99d0-f9a20c732973">
 
 
 
