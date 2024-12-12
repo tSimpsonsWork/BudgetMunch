@@ -63,7 +63,7 @@ An Application designed to help users budget select food choices in their immedi
 
 git clone https://github.com/tSimpsonsWork/BudgetMunch.git
 
-2) Set up your .env file for sensitive credentials: 
+2) Set up your .env file for sensitive credentials in the BudgetMunch filepath: 
    1. DATASOURCE_URL=
    2. DATASOURCE_USER=
    3. DATASOURCE_PASSWORD=
