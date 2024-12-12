@@ -28,8 +28,6 @@ class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
-    @Autowired
-    private RestTemplate restTemplate;
 
     @Test
     void testSaveUser() {
