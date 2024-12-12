@@ -92,7 +92,7 @@ java -jar target/Project2-0.0.1-SNAPSHOT.jar
 <img width="1464" alt="Screenshot 2024-12-06 at 10 13 37 PM" src="https://github.com/user-attachments/assets/791eeffd-66cb-46bf-9127-75d199664a90">
 
 
-5) The application will automatically create tables based on the JPA configuration. [Once run JPA will created database tables]
+5) The application will automatically create tables based on the JPA configuration. [Once run JPA will create a database tables]
 
 
 # **Usage**
