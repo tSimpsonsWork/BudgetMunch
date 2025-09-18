@@ -78,13 +78,6 @@ git clone https://github.com/tSimpsonsWork/BudgetMunch.git
 
 ./mvnw clean package
 
-<img width="786" alt="Screenshot 2024-12-11 at 6 07 49 PM" src="https://github.com/user-attachments/assets/9a416135-22ea-4a10-8d17-3d3bdde17c07" />
-
-
-
-
-
-
 4) Run the application:
 
 java -jar target/Project2-0.0.1-SNAPSHOT.jar
